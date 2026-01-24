@@ -1,0 +1,180 @@
+html {
+    background: #000;
+}
+
+body {
+    background: url(sprites/world-select-bg.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.inventory {
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 64px);
+    gap: 4px;
+    justify-content: center;
+}
+
+/* Mobile */
+@media (max-width: 1280px) {
+    .inventory {
+        grid-template-columns: repeat(auto-fill, 128px);
+        gap: 8px;
+        /* tăng gap cho hợp tay chạm */
+    }
+}
+
+
+.item-slot {
+    aspect-ratio: 1 / 1;
+
+    background-image: url("sprites/inventory-item-frame.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.item-slot img {
+    max-width: 70%;
+    max-height: 70%;
+    transition: max-width 0.15s ease, max-height 0.15s ease;
+    pointer-events: none;
+}
+
+.item-slot:hover img {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.item-slot img.weapon {
+    max-width: 90%;
+    max-height: 90%;
+    
+    transition: max-width 0.15s ease, max-height 0.15s ease;
+    pointer-events: none;
+}
+
+.item-slot:hover img.weapon {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+/* overlay full screen */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+
+    background: rgba(0, 0, 0, 0.6);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+}
+
+/* popup box */
+.popup {
+    position: relative;
+
+    min-width: 50%;
+
+    background: #1b1b1b;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 16px 16px 14px;
+
+    color: #fff;
+    font-size: 24px;
+    line-height: 1.4;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* title */
+.popup .title {
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+/* close button */
+.popup .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+
+    border: none;
+    background: #2a2a2a;
+    color: #fff;
+    cursor: pointer;
+}
+
+.popup .close-btn:hover {
+    background: #3a3a3a;
+}
+
+.equip-bar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 8px;
+  background: #111;
+  border-bottom: 1px solid #333;
+}
+
+.equip-slot {
+  width: 72px;
+  height: 72px;
+
+  background-image: url("sprites/inventory-item-frame.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #aaa;
+  font-size: 12px;
+  text-align: center;
+}
+
+
+.btn-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  gap: 12px;
+}
+
+.btn-row button {
+  flex: 1;
+  padding: 6px 0;
+  font-size: 18px;
+  border-radius: 6px;
+  border: none;
+  background: #2a2a2a;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-row button:hover {
+  background: #3a3a3a;
+}
