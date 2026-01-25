@@ -1,3 +1,11 @@
+* {
+    user-select: none;
+    /* Chrome, Safari */
+    -webkit-user-select: none;
+    /* Edge */
+    -ms-user-select: none;
+}
+
 html {
     background: #000;
 }
@@ -29,11 +37,10 @@ body {
     }
 }
 
-
 .item-slot {
     aspect-ratio: 1 / 1;
 
-    background-image: url("sprites/inventory-item-frame.png");
+    background-image: url("https://raw.githubusercontent.com/sdroimod/magic-rampage-inventory/refs/heads/main/sprites/inventory-item-frame.png");
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -58,7 +65,7 @@ body {
 .item-slot img.weapon {
     max-width: 90%;
     max-height: 90%;
-    
+
     transition: max-width 0.15s ease, max-height 0.15s ease;
     pointer-events: none;
 }
@@ -80,7 +87,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(6px);
+    /* backdrop-filter: blur(6px); */
 }
 
 /* popup box */
@@ -129,52 +136,196 @@ body {
 }
 
 .equip-bar {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
 
-  padding: 8px;
-  background: #111;
-  border-bottom: 1px solid #333;
+    padding: 8px;
+    background: #111;
+    border-bottom: 1px solid #333;
 }
 
 .equip-slot {
-  width: 72px;
-  height: 72px;
+    width: 76px;
+    /* PC */
+    aspect-ratio: 1 / 1;
 
-  background-image: url("sprites/inventory-item-frame.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+    background: url("https://raw.githubusercontent.com/sdroimod/magic-rampage-inventory/refs/heads/main/sprites/inventory-item-frame.png") center / contain no-repeat;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: #aaa;
-  font-size: 12px;
-  text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
+
+/* Mobile / tablet */
+@media (max-width: 1280px) {
+    .equip-slot {
+        width: 136px;
+    }
+}
+
+.equip-slot img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    transition: transform 0.15s ease;
+    pointer-events: none;
+}
+
+.equip-slot:hover img {
+    transform: scale(1.2);
+}
+
+.equip-slot img.weapon {
+    width: 90%;
+    height: 90%;
+}
+
+.equip-slot:hover img.weapon {
+    transform: scale(1.1);
+}
+
+
+.equip-container {
+    width: 100%;
+    background: #111;
+    border-bottom: 1px solid #333;
+}
+
+/* equip-info nằm dưới, nhưng hiển thị theo hàng ngang */
+.equip-info {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+
+    padding: 6px 12px;
+    font-size: 13px;
+    color: #fff;
+
+    background: #1b1b1b;
+    border-top: 1px solid #333;
+}
+
+.equip-info div {
+    opacity: 0.9;
+    white-space: nowrap;
+}
+
+.equip-total {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+
+    padding: 6px 12px;
+    font-size: 13px;
+    color: #fff;
+
+    background: #141414;
+    border-top: 1px solid #333;
+}
+
 
 
 .btn-row {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 12px;
-  gap: 12px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    gap: 12px;
 }
 
 .btn-row button {
-  flex: 1;
-  padding: 6px 0;
-  font-size: 18px;
-  border-radius: 6px;
-  border: none;
-  background: #2a2a2a;
-  color: #fff;
-  cursor: pointer;
+    flex: 1;
+    padding: 6px 0;
+    font-size: 18px;
+    border-radius: 6px;
+    border: none;
+    background: #2a2a2a;
+    color: #fff;
+    cursor: pointer;
 }
 
 .btn-row button:hover {
-  background: #3a3a3a;
+    background: #3a3a3a;
+}
+
+.equip-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 6px 0;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #3a5;
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.equip-btn:hover {
+    background: #4c7;
+}
+
+.element-btn {
+    display: block;
+    width: 100%;
+    margin: 6px 0;
+    padding: 6px 0;
+
+    background: #2a2a2a;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.element-btn:hover {
+    background: #3a3a3a;
+}
+
+.change-element-btn {
+    margin-left: 4px;
+    flex: 1;
+    padding: 6px 6px;
+    font-size: 18px;
+    border-radius: 6px;
+    border: none;
+    background: #2a2a2a;
+    color: #fff;
+    cursor: pointer;
+}
+
+.change-element-btn:hover {
+    background: #3a3a3a;
+}
+
+.details {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+
+    padding: 6px 12px;
+    font-size: 13px;
+    color: #fff;
+
+    background: #141414;
+    border-top: 1px solid #333;
+}
+
+.class-panel {
+  margin-top: 8px;
+  text-align: center;
+}
+
+#class-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+#current-class {
+  margin-top: 4px;
+  font-size: 13px;
 }
