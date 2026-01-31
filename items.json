@@ -2503,7 +2503,7 @@
     "element": "darkness",
     "type": "armor",
     "subType": "cloth",
-    "sprite": "/sprites/armors/armor_cloth_special_f1b.png",
+    "sprite": "/sprites/armors/armor_cloth_special_f2.png",
     "levelMax": 8,
     "cooldown": 0,
     "stats": {
