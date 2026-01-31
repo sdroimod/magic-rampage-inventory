@@ -1,372 +1,282 @@
-/* --- GLOBAL & FONTS --- */
-html, body {
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
+/* --- RESET & VARS --- */
 :root {
-    --bg-dark: #0a0a0a;
-    --bg-panel: rgba(20, 20, 20, 0.85);
-    --border-color: #444;
-    --text-main: #eee;
-    --text-muted: #aaa;
+    --bg-dark: #050505;
+    --bg-glass: rgba(20, 20, 25, 0.85); /* Tăng độ đậm nền để dễ đọc hơn */
+    
+    --accent-gold: #ffb142;
     --accent-green: #2ecc71;
-    --accent-hover: #27ae60;
-    --btn-danger: #e74c3c;
-    --slot-bg: rgba(255, 255, 255, 0.05);
-    --header-height: 40px;
+    --accent-red: #e74c3c;
+    --accent-blue: #3498db;
+    
+    --border-light: rgba(255, 255, 255, 0.15);
+    
+    --font-header: 'Cinzel', serif;
+    --font-body: 'Roboto', sans-serif;
+    
+    /* [MOBILE OPTIMIZED] Giảm chiều cao header và khoảng cách */
+    --header-height: 44px;
+    --gap: 8px;
 }
 
-* {
-    box-sizing: border-box;
-    outline: none;
-}
+* { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
 body {
     margin: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: #000 url('sprites/world-select-bg.png') no-repeat center center/cover;
-    color: var(--text-main);
-    height: 100vh;
+    font-family: var(--font-body);
+    background: #000;
+    color: #eee;
+    height: 100dvh; /* Dynamic viewport height */
     overflow: hidden;
-    line-height: 1.4;
     display: flex;
     flex-direction: column;
 }
 
-/* --- TOP BAR STYLES --- */
+/* Background Image */
+body::before {
+    content: "";
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: url('sprites/world-select-bg.png') no-repeat center center/cover;
+    z-index: -2; filter: brightness(0.6);
+}
+.bg-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.3), #000);
+    z-index: -1; pointer-events: none;
+}
+
+/* --- UTILS --- */
+.glass-panel {
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+.text-gold { color: var(--accent-gold); text-shadow: 0 0 8px rgba(255, 177, 66, 0.4); }
+.text-blue { color: var(--accent-blue); text-shadow: 0 0 8px rgba(52, 152, 219, 0.4); }
+.hidden { display: none !important; }
+
+/* --- HEADER --- */
 .top-bar {
     height: var(--header-height);
-    background: rgba(10, 10, 10, 0.95);
-    border-bottom: 1px solid #333;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 10px;
-    font-size: 0.85rem;
-    color: #bbb;
-    z-index: 100;
-    flex-shrink: 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px; z-index: 100;
+    border-bottom: 1px solid var(--border-light);
+    flex-shrink: 0; /* Không cho header co lại */
 }
-
-.top-bar a { color: var(--text-muted); text-decoration: none; transition: 0.2s; }
-.top-bar a:hover { color: #fff; text-decoration: underline; }
-
-.app-title { font-weight: 700; color: #fff; font-size: 1rem; letter-spacing: 0.5px; }
-.divider { margin: 0 8px; color: #444; }
-
-/* Discord Style */
-.discord-link {
-    color: #5865F2 !important;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+.app-title {
+    font-family: var(--font-header); font-weight: 700; font-size: 1rem;
+    color: #ddd; letter-spacing: 1px;
 }
-.discord-link:hover {
-    color: #7289da !important;
-    text-shadow: 0 0 8px rgba(88, 101, 242, 0.4);
+.top-right { display: flex; gap: 8px; }
+.social-link {
+    display: flex; align-items: center; gap: 5px;
+    text-decoration: none; padding: 4px 8px; border-radius: 4px;
 }
+.social-link svg { width: 16px; height: 16px; }
+.social-link.discord { color: #7289da; background: rgba(114, 137, 218, 0.15); }
+.social-link.youtube { color: #ff4d4d; background: rgba(255, 77, 77, 0.15); }
 
-/* [NEW] Youtube Style */
-.youtube-link {
-    color: #FF0000 !important; /* Màu đỏ Youtube */
-    font-weight: 700;
-}
-.youtube-link:hover {
-    color: #ff4d4d !important;
-    text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-}
-
-
-/* Mobile Responsiveness */
-@media (max-width: 500px) {
-    .top-bar { 
-        font-size: 0.75rem; 
-        padding: 0 8px;
-    }
-    .app-title { font-size: 0.9rem; }
-    
-    .guide-text { display: inline-block; }
-    .divider { display: inline-block; }
-}
-
-/* --- APP CONTAINER --- */
+/* --- MAIN LAYOUT --- */
 .app-container {
+    flex: 1; /* Chiếm toàn bộ không gian còn lại */
     display: flex;
-    flex-direction: column;
-    flex-grow: 1; 
-    height: auto; 
-    overflow: hidden;
-    width: 100%;
-    margin: 0 auto;
-    background: rgba(0, 0, 0, 0.6);
-    box-shadow: 0 0 50px rgba(0,0,0,0.8);
-    transition: all 0.3s ease;
+    flex-direction: column; /* Mobile mặc định xếp dọc */
+    padding: var(--gap);
+    gap: var(--gap);
+    overflow: hidden; /* Ngăn cuộn trang chính */
+    width: 100%; max-width: 1400px; margin: 0 auto;
 }
 
-@media (min-width: 850px) {
-    .app-container {
-        max-width: 1200px;
-        flex-direction: row;
-        height: calc(100vh - var(--header-height) - 40px);
-        margin: 20px auto; 
-        border-radius: 12px;
-        border: 1px solid #333;
-        flex-grow: 0; 
-    }
-
-    .equip-container {
-        width: 350px;
-        border-right: 1px solid var(--border-color);
-        overflow-y: auto;
-    }
-
-    .inventory {
-        flex-grow: 1;
-    }
-}
-
-/* --- CUSTOM SCROLLBAR --- */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
-::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #777; }
-
-/* --- EQUIP SECTION --- */
+/* --- LEFT PANEL: EQUIPMENT --- */
 .equip-container {
-    flex-shrink: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.9));
-    display: flex;
-    flex-direction: column;
+    border-radius: 12px;
+    display: flex; flex-direction: column;
+    padding: 4px;
+    flex-shrink: 0; /* Không co nhỏ phần này, nhưng nội dung bên trong sẽ nhỏ đi */
 }
 
+/* [MOBILE] Visual Wrapper: Thu nhỏ chiều cao */
+.equip-visual-wrapper {
+    position: relative;
+    height: 170px; /* Giảm từ 230px xuống 170px cho Mobile */
+    display: flex; justify-content: center; align-items: center;
+    margin-bottom: 4px; overflow: hidden;
+}
+
+/* [MOBILE] Equip Bar: Scale nhỏ lại */
 .equip-bar {
     position: relative;
-    width: 300px;
-    height: 220px;
-    margin: 10px auto;
-    flex-shrink: 0;
+    width: 300px; height: 220px;
+    transform: scale(0.75); /* Thu nhỏ còn 75% */
+    transform-origin: center;
 }
 
+/* Slots & Roots styles */
 .root-side {
-    position: absolute;
-    width: 180px;
-    height: 45px;
-    z-index: 1;
-    pointer-events: none;
-    transform-origin: center center;
-    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8));
+    position: absolute; width: 180px; pointer-events: none;
+    filter: drop-shadow(0 4px 6px #000); opacity: 0.9;
 }
 .root-bottom { top: 185px; left: 50%; transform: translate(-50%, -50%); }
 .root-left   { top: 108px; left: 105px; transform: translate(-50%, -50%) rotate(-60deg); }
 .root-right  { top: 108px; right: 105px; transform: translate(50%, -50%) rotate(60deg); }
 
 .equip-slot {
-    position: absolute;
-    z-index: 10;
-    width: 64px;
-    height: 64px;
-    background: var(--slot-bg) url("https://raw.githubusercontent.com/sdroimod/magic-rampage-inventory/refs/heads/main/sprites/inventory-item-frame.png") center/contain no-repeat;
-    transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border-radius: 8px;
+    position: absolute; width: 64px; height: 64px;
+    background: rgba(0,0,0,0.6) url("https://raw.githubusercontent.com/sdroimod/magic-rampage-inventory/refs/heads/main/sprites/inventory-item-frame.png") center/contain no-repeat;
+    border-radius: 10px; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    transition: transform 0.1s;
 }
-.equip-slot:hover {
-    transform: translate(-50%, -50%) scale(1.1);
-    filter: brightness(1.2) drop-shadow(0 0 10px var(--accent-green));
+.equip-slot img { width: 80%; height: 80%; object-fit: contain; }
+.equip-slot:active { transform: translate(-50%, -50%) scale(0.95); }
+.equip-slot.has-item { border: 1px solid var(--accent-gold); box-shadow: 0 0 12px rgba(255, 177, 66, 0.3); }
+
+.slot-placeholder { font-size: 24px; opacity: 0.3; }
+.slot-top    { top: 30px; left: 50%; transform: translate(-50%, -50%); }
+.slot-center { top: 130px; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; }
+.slot-left   { top: 185px; left: 60px; transform: translate(-50%, -50%); }
+.slot-right  { top: 185px; left: 240px; transform: translate(-50%, -50%); }
+
+/* Stats & Controls (Compact Mobile) */
+.char-controls { margin-bottom: 8px; }
+.btn-block { width: 100%; display: flex; justify-content: center; }
+
+.stats-panel {
+    background: rgba(0,0,0,0.4); border-radius: 8px;
+    padding: 3px; margin-bottom: 2px;
+    display: flex; justify-content: space-around; align-items: center;
+    border: 1px solid rgba(255,255,255,0.05);
 }
-.slot-top    { top: 30px; left: 50%; }
-.slot-center { top: 130px; left: 50%; }
-.slot-left   { top: 185px; left: 60px; }
-.slot-right  { top: 185px; left: 240px; }
+.stat-label { font-size: 0.65rem; text-transform: uppercase; color: #888; margin-bottom: 2px; }
+.stat-value { font-family: var(--font-header); font-size: 1.2rem; font-weight: 700; }
+.stat-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.15); }
 
-.equip-slot img { width: 75%; height: 75%; object-fit: contain; }
-.placeholder-icon { opacity: 0.5; }
-
-/* --- INFO & CONTROLS --- */
-.control-bar { text-align: center; padding: 10px; }
-
-.equip-info {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    padding: 4px 2px;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    text-shadow: 1px 1px 2px #000;
+/* Text Details (Ẩn bớt padding thừa) */
+.equip-details-text {
+    font-size: 0.75rem; color: #aaa;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
 }
-.equip-info div {
-    background: rgba(0,0,0,0.4);
-    padding: 2px 8px;
-    border-radius: 4px;
+.equip-details-text div {
+    background: rgba(255,255,255,0.03); padding: 4px 8px; border-radius: 4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-.equip-total {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin: 5px 15px;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+/* --- RIGHT PANEL: INVENTORY --- */
+.inventory-container {
+    flex: 1; /* Quan trọng: Tự động dãn để chiếm hết khoảng trống còn lại */
+    border-radius: 12px;
+    display: flex; flex-direction: column;
+    overflow: hidden; /* Cần thiết để scroll bên trong hoạt động */
+    min-height: 0; /* Fix lỗi flexbox trên một số trình duyệt mobile */
 }
 
-.total-row {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #ccc;
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 5px;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+.inventory-header {
+    padding: 8px 4px;
+    background: rgba(255,255,255,0.04); border-bottom: 1px solid var(--border-light);
+    display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
 }
+.inventory-header h3 { margin: 0; font-family: var(--font-header); font-size: 0.9rem; color: #ccc; }
+.inv-count { font-size: 0.7rem; color: #666; background: #111; padding: 2px 6px; border-radius: 8px; }
 
-.total-row:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-    padding-top: 5px;
-}
-
-.total-row span {
-    color: var(--accent-green);
-    font-size: 1.1rem;
-    text-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
-}
-
-/* --- INVENTORY GRID --- */
-.inventory {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 5px;
+.inventory-grid {
+    flex: 1;
+    overflow-y: auto; /* Scroll ở đây */
+    padding: 8px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-    gap: 8px;
+    /* Grid tự động điều chỉnh kích thước item */
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 6px;
     align-content: start;
-    background: rgba(10, 10, 10, 0.6);
+    -webkit-overflow-scrolling: touch; /* Mượt hơn trên iOS */
 }
+
+/* Scrollbar đẹp hơn */
+.inventory-grid::-webkit-scrollbar { width: 4px; }
+.inventory-grid::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
 
 .item-slot {
-    aspect-ratio: 1/1;
-    background: var(--slot-bg) url("https://raw.githubusercontent.com/sdroimod/magic-rampage-inventory/refs/heads/main/sprites/inventory-item-frame.png") center/contain no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: transform 0.1s, background 0.1s;
-    position: relative;
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.06) url("https://raw.githubusercontent.com/sdroimod/magic-rampage-inventory/refs/heads/main/sprites/inventory-item-frame.png") center/contain no-repeat;
+    border-radius: 6px; position: relative;
+    display: flex; align-items: center; justify-content: center;
 }
-.item-slot:hover {
-    transform: scale(1.05);
-    background-color: rgba(255,255,255,0.1);
-    z-index: 2;
-}
-.item-slot img { width: 70%; height: 70%; object-fit: contain; }
+.item-slot img { width: 75%; height: 75%; object-fit: contain; }
+.item-slot.selected { border: 1px solid var(--accent-green); box-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
 
 /* --- BUTTONS --- */
 .btn {
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    background: #444;
-    color: #fff;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    border: none; border-radius: 6px; padding: 8px 16px;
+    font-family: var(--font-body); font-weight: 500; font-size: 0.85rem;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
 }
-.btn:hover { background: #555; transform: translateY(-1px); }
-.btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--accent-green); color: #0b2e13; }
-.btn-primary:hover { background: var(--accent-hover); box-shadow: 0 0 10px rgba(46, 204, 113, 0.4); }
-.btn-outline { border: 1px solid #666; background: transparent; color: #ddd; }
-.btn-outline:hover { border-color: #999; background: rgba(255,255,255,0.05); }
+.btn-gold { 
+    background: linear-gradient(to bottom, #d4a017, #b38808); 
+    color: #111; box-shadow: 0 3px 0 #8c6a05;
+}
+.btn-gold:active { transform: translateY(2px); box-shadow: 0 1px 0 #8c6a05; }
 
-.btn-sm {
-    padding: 4px 10px;
-    font-size: 0.75rem;
-    height: 24px;
-    min-width: 60px;
-}
-.btn.active {
-    background-color: rgba(46, 204, 113, 0.15);
-    border: 1px solid var(--accent-green);
-    color: var(--accent-green);
+.btn-primary { background: var(--accent-green); color: #050505; font-weight: 700; }
+.btn-outline { background: transparent; border: 1px solid #555; color: #ccc; }
+.btn-sm { padding: 4px 10px; font-size: 0.75rem; }
+
+/* --- DESKTOP / TABLET MODE --- */
+/* Khi màn hình rộng hơn 900px, trả lại kích thước lớn */
+@media (min-width: 900px) {
+    .app-container {
+        flex-direction: row; /* Xếp ngang */
+        padding: 20px; gap: 20px;
+    }
+
+    .equip-container {
+        width: 360px; height: 100%;
+        padding: 12px;
+    }
+
+    /* Trả lại kích thước gốc cho Visual */
+    .equip-visual-wrapper {
+        height: 230px;
+        margin-bottom: 12px;
+    }
+    .equip-bar {
+        transform: scale(1); /* Full size */
+    }
+
+    /* Tăng font size stats */
+    .stats-panel { padding: 12px; margin-bottom: 12px; }
+    .stat-label { font-size: 0.75rem; }
+    .stat-value { font-size: 1.5rem; }
+    
+    .equip-details-text { font-size: 0.85rem; gap: 8px; }
+    .equip-details-text div { padding: 6px 10px; }
+
+    .inventory-grid {
+        padding: 12px; gap: 8px;
+        grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+    }
 }
 
 /* --- MODAL --- */
-.hidden { display: none !important; }
-
 .modal-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
 }
+.modal-overlay:not(.hidden) { opacity: 1; pointer-events: auto; }
 
 .modal-box {
-    background: #1a1a1a;
-    width: 90%;
-    max-width: 380px;
-    border: 1px solid #444;
-    border-radius: 12px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
-    overflow: hidden;
-    position: relative;
+    background: #181818; border: 1px solid #444;
+    width: 90%; max-width: 400px; max-height: 80vh;
+    border-radius: 12px; display: flex; flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.9);
 }
+.modal-header { padding: 14px; background: #222; text-align: center; color: var(--accent-gold); font-family: var(--font-header); font-size: 1.1rem; border-bottom: 1px solid #333; }
+.modal-body { padding: 16px; overflow-y: auto; }
+.modal-footer { padding: 14px; background: #1a1a1a; border-top: 1px solid #333; display: flex; gap: 8px; flex-direction: column; }
 
-.modal-header {
-    background: #222;
-    padding: 15px;
-    border-bottom: 1px solid #333;
-    font-size: 1.1rem;
-    color: var(--accent-green);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.modal-body { padding: 20px; max-height: 60vh; overflow-y: auto; }
-.modal-footer { padding: 15px 20px; background: #222; border-top: 1px solid #333; }
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none; border: none;
-    font-size: 1.5rem;
-    color: #666;
-    cursor: pointer;
-    z-index: 10;
-}
-.close-btn:hover { color: #fff; }
-
-.stat-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 8px 0; border-bottom: 1px solid #333;
-}
-.stat-row:last-child { border-bottom: none; }
-.control-group { display: flex; gap: 10px; margin-bottom: 10px; }
-.control-group .btn { flex: 1; }
-.skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-/* Mobile Fixes */
-@media (max-width: 600px) {
-    .equip-slot { width: 56px; height: 56px; }
-    .equip-bar { transform: scale(0.9); margin: 0 auto; }
-}
+.close-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; color: #666; font-size: 24px; padding: 0; }
+.stat-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #333; font-size: 0.9rem; }
+.boost-tag { display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: 4px; color: #aaa; }
+.el-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.class-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
