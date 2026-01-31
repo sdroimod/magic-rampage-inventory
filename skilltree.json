@@ -22,5 +22,17 @@
     {
         "target": "axe",
         "boost": 1.5
+    },
+    {
+        "target": "armor",
+        "boost": 1.2
+    },
+    {
+        "target": "speed",
+        "boost": 1.04
+    },
+    {
+        "target": "jump",
+        "boost": 1.03
     }
 ]
