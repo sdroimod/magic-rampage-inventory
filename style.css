@@ -15,6 +15,7 @@ html, body {
     --accent-hover: #27ae60;
     --btn-danger: #e74c3c;
     --slot-bg: rgba(255, 255, 255, 0.05);
+    --header-height: 40px;
 }
 
 * {
@@ -30,13 +31,74 @@ body {
     height: 100vh;
     overflow: hidden;
     line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- TOP BAR STYLES --- */
+.top-bar {
+    height: var(--header-height);
+    background: rgba(10, 10, 10, 0.95);
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-size: 0.85rem;
+    color: #bbb;
+    z-index: 100;
+    flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.top-bar a { color: var(--text-muted); text-decoration: none; transition: 0.2s; }
+.top-bar a:hover { color: #fff; text-decoration: underline; }
+
+.app-title { font-weight: 700; color: #fff; font-size: 1rem; letter-spacing: 0.5px; }
+.divider { margin: 0 8px; color: #444; }
+
+/* Discord Style */
+.discord-link {
+    color: #5865F2 !important;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.discord-link:hover {
+    color: #7289da !important;
+    text-shadow: 0 0 8px rgba(88, 101, 242, 0.4);
+}
+
+/* [NEW] Youtube Style */
+.youtube-link {
+    color: #FF0000 !important; /* Màu đỏ Youtube */
+    font-weight: 700;
+}
+.youtube-link:hover {
+    color: #ff4d4d !important;
+    text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+}
+
+
+/* Mobile Responsiveness */
+@media (max-width: 500px) {
+    .top-bar { 
+        font-size: 0.75rem; 
+        padding: 0 8px;
+    }
+    .app-title { font-size: 0.9rem; }
+    
+    .guide-text { display: inline-block; }
+    .divider { display: inline-block; }
 }
 
 /* --- APP CONTAINER --- */
 .app-container {
     display: flex;
-    flex-direction: column; /* Mặc định Mobile: Dọc */
-    height: 100%;
+    flex-direction: column;
+    flex-grow: 1; 
+    height: auto; 
     overflow: hidden;
     width: 100%;
     margin: 0 auto;
@@ -45,27 +107,25 @@ body {
     transition: all 0.3s ease;
 }
 
-/* [PC FIX] Màn hình lớn: Chia 2 cột, rộng hơn */
 @media (min-width: 850px) {
     .app-container {
-        max-width: 1200px; /* Mở rộng chiều ngang */
-        flex-direction: row; /* Xếp ngang */
-        margin: 20px auto; /* Căn giữa, cách lề trên dưới */
-        height: calc(100vh - 40px);
+        max-width: 1200px;
+        flex-direction: row;
+        height: calc(100vh - var(--header-height) - 40px);
+        margin: 20px auto; 
         border-radius: 12px;
         border: 1px solid #333;
+        flex-grow: 0; 
     }
 
-    /* Cột bên trái: Trang bị & Stats */
     .equip-container {
-        width: 350px; /* Cố định chiều rộng cột trái */
+        width: 350px;
         border-right: 1px solid var(--border-color);
-        overflow-y: auto; /* Cho phép cuộn nếu màn hình thấp */
+        overflow-y: auto;
     }
 
-    /* Cột bên phải: Kho đồ */
     .inventory {
-        flex-grow: 1; /* Chiếm hết phần còn lại */
+        flex-grow: 1;
     }
 }
 
@@ -91,7 +151,6 @@ body {
     flex-shrink: 0;
 }
 
-/* Gỗ nền */
 .root-side {
     position: absolute;
     width: 180px;
@@ -105,7 +164,6 @@ body {
 .root-left   { top: 108px; left: 105px; transform: translate(-50%, -50%) rotate(-60deg); }
 .root-right  { top: 108px; right: 105px; transform: translate(50%, -50%) rotate(60deg); }
 
-/* Slots */
 .equip-slot {
     position: absolute;
     z-index: 10;
@@ -153,12 +211,12 @@ body {
 
 .equip-total {
     display: flex;
-    flex-direction: column; /* Xếp dọc cho gọn trong cột trái */
+    flex-direction: column;
     gap: 8px;
-    margin: 5px 15px; /* Cách lề trên 20px, trái phải 15px */
+    margin: 5px 15px;
     padding: 15px;
-    background: rgba(255, 255, 255, 0.03); /* Nền sáng rất nhẹ */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Viền mờ */
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
 }
 
@@ -167,7 +225,7 @@ body {
     font-weight: 600;
     color: #ccc;
     display: flex;
-    justify-content: space-between; /* Căn đều 2 bên: Chữ bên trái, số bên phải */
+    justify-content: space-between;
     padding-bottom: 5px;
     border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
 }
@@ -183,13 +241,13 @@ body {
     font-size: 1.1rem;
     text-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
 }
+
 /* --- INVENTORY GRID --- */
 .inventory {
     flex-grow: 1;
     overflow-y: auto;
     padding: 5px;
     display: grid;
-    /* Tự động điều chỉnh số cột, tối thiểu 70px */
     grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
     gap: 8px;
     align-content: start;
@@ -249,20 +307,17 @@ body {
 }
 
 /* --- MODAL --- */
-/* [FIX 1] Thêm class hidden để JS hoạt động */
-.hidden {
-    display: none !important;
-}
+.hidden { display: none !important; }
 
 .modal-overlay {
-    position: fixed; /* Bắt buộc fixed để đè lên toàn màn hình */
+    position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(5px);
-    display: flex; /* Dùng flex để căn giữa modal */
+    display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* [FIX 2] Z-index cao để không bị slot đè */
+    z-index: 1000;
 }
 
 .modal-box {
@@ -273,7 +328,7 @@ body {
     border-radius: 12px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
     overflow: hidden;
-    position: relative; /* Để nút close định vị đúng */
+    position: relative;
 }
 
 .modal-header {

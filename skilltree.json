@@ -1,19 +1,19 @@
 [
     {
         "target": "sword",
-        "boost": 1.4
+        "boost": 1.15
     },
     {
         "target": "dagger",
-        "boost": 1.4
+        "boost": 1.2
     },
     {
         "target": "staff",
-        "boost": 1.4
+        "boost": 1.2
     },
     {
         "target": "spear",
-        "boost": 1.2
+        "boost": 1.4
     },
     {
         "target": "hammer",
@@ -21,6 +21,6 @@
     },
     {
         "target": "axe",
-        "boost": 1.4
+        "boost": 1.5
     }
 ]
